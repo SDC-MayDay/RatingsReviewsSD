@@ -1,0 +1,24 @@
+{
+  "name": "ratingsreviewssd",
+  "version": "1.0.0",
+  "description": "The Ratings and Reviews system design backend/api/database implementation repo",
+  "main": "index.js",
+  "dependencies": {
+    "csv-parser": "^3.0.0",
+    "csv-write-stream": "^2.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SDC-MayDay/RatingsReviewsSD.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SDC-MayDay/RatingsReviewsSD/issues"
+  },
+  "homepage": "https://github.com/SDC-MayDay/RatingsReviewsSD#readme"
+}
