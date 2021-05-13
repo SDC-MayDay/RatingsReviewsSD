@@ -4,10 +4,12 @@
   "description": "The Ratings and Reviews system design backend/api/database implementation repo",
   "main": "index.js",
   "dependencies": {
+    "@types/k6": "^0.31.1",
     "csv-parser": "^3.0.0",
     "csv-write-stream": "^2.0.0",
     "express": "^4.17.1",
     "fast-csv": "^4.3.6",
+    "k6": "0.0.0",
     "mysql": "^2.18.1",
     "path": "^0.12.7"
   },

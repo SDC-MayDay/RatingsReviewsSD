@@ -1,10 +1,12 @@
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable guard-for-in */
 /* eslint-disable no-plusplus */
 const db = require('../../Databases');
 
 module.exports = {
-  getReviews: (productId, callback) => {
-    const queryString = 'SELECT Reviews.*, ReviewPhotos.Photo_url FROM Reviews INNER JOIN ReviewPhotos ON Reviews.Review_ID = ReviewPhotos.Review_ID WHERE Reviews.Product_ID=(?) AND Reviews.Reported = (?)';
-    db.query(queryString, [productId, false], (err, data) => {
+  getReviews: async (productId, callback) => {
+    const queryString = 'SELECT Reviews.*, ReviewPhotos.Photo_url FROM Reviews INNER JOIN ReviewPhotos ON Reviews.Review_ID = ReviewPhotos.Review_ID WHERE Reviews.Product_ID=(?) ORDER BY Reviews.Helpfulness DESC';
+    db.query(queryString, [productId], (err, data) => {
       if (err) {
         callback(err);
       } else {
@@ -13,7 +15,7 @@ module.exports = {
     });
   },
 
-  getMetaData: (productId, callback) => {
+  getMetaData: async (productId, callback) => {
     const allMetaData = {
       ProductID: productId,
       Characteristics: {
@@ -59,38 +61,29 @@ module.exports = {
       if (errorChar) {
         callback(errorChar);
       } else {
-        const queryStars = 'SELECT Rating FROM Reviews WHERE Product_ID = (?)';
-        db.query(queryStars, [productId], (errStar, starData) => {
+        const queryStars = 'SELECT Rating, Recommend FROM Reviews WHERE Product_ID = (?)';
+        db.query(queryStars, [productId], (errStar, revData) => {
           if (errStar) {
             callback(errStar);
           } else {
-            const queryRec = 'SELECT Recommend FROM Reviews WHERE Product_ID = (?)';
-            db.query(queryRec, [productId], (errRec, recData) => {
-              if (errRec) {
-                callback(errRec);
+            for (let k = 0; k < charData.length; k++) {
+              allMetaData.Characteristics[charData[k].Name].Characteristic_ID = charData[k].Characteristic_ID;
+              if (!allMetaData.Characteristics[charData[k].Name].Value) {
+                allMetaData.Characteristics[charData[k].Name].Value = charData[k].Value;
               } else {
-                for (let k = 0; k < charData.length; k++) {
-                  allMetaData['Characteristics'][charData[k].Name].Characteristic_ID = charData[k].Characteristic_ID;
-                  if (!allMetaData['Characteristics'][charData[k].Name].Value) {
-                    allMetaData['Characteristics'][charData[k].Name].Value = charData[k].Value;
-                  } else {
-                    allMetaData['Characteristics'][charData[k].Name].Value += charData[k].Value;
-                  }
-                  // allMetaData['Characteristics'][charData[k].Name].Value /= (k + 1);
-                }
-                for (let i = 0; i < starData.length; i++) {
-                  allMetaData.Ratings[starData[i].Rating]++;
-                }
-                for (let j = 0; j < recData.length; j++) {
-                  if (recData[j].Recommend === 'true') {
-                    allMetaData.Recommended.true++;
-                  } else {
-                    allMetaData.Recommended.false++;
-                  }
-                }
-                callback(null, allMetaData);
+                allMetaData.Characteristics[charData[k].Name].Value += charData[k].Value;
               }
-            });
+              // allMetaData['Characteristics'][charData[k].Name].Value /= (k + 1);
+            }
+            for (let i = 0; i < revData.length; i++) {
+              allMetaData.Ratings[revData[i].Rating]++;
+              if (revData[i].Recommend === 'true') {
+                allMetaData.Recommended.true++;
+              } else {
+                allMetaData.Recommended.false++;
+              }
+            }
+            callback(null, allMetaData);
           }
         });
       }
@@ -144,7 +137,6 @@ module.exports = {
             for (const key in chars) {
               metaArray.push([key, id, chars[key]]);
             }
-            console.log(metaArray);
             const metaQuery = 'INSERT INTO Characteristic_Reviews (Characteristic_ID, Review_ID, Value) VALUES ?';
             db.query(metaQuery, [metaArray], (errMeta) => {
               if (errMeta) {

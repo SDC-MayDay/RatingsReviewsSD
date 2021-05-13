@@ -14,22 +14,21 @@ writer.pipe(fs.createWriteStream('/Users/anindyamehta/Documents/HR_Immersive/Rat
 fs.createReadStream('/Users/anindyamehta/Documents/HR_Immersive/RatingsReviewsSD/Databases/reviews.csv')
   .pipe(csv())
   .on('data', (data) => {
-    let parsedEpoch = parseInt(data.date);
+    const parsedEpoch = parseInt(data.date);
     if (parsedEpoch) {
-      let newDate = new Date(parsedEpoch)
-      data['date'] = newDate.toString();
+      const newDate = new Date(parsedEpoch);
+      data.date = newDate.toString();
     } else {
-      let tempDate = new Date(data['date'])
-      let epochDate = tempDate.getTime();
-      let newParsedDate = new Date(epochDate);
-      data['date'] = newParsedDate.toString();
+      const tempDate = new Date(data.date);
+      const epochDate = tempDate.getTime();
+      const newParsedDate = new Date(epochDate);
+      data.date = newParsedDate.toString();
     }
-    if (data['helpfulness'] === 'null' ) {
-      data['helpfulness'] = 0;
+    if (data.helpfulness === 'null') {
+      data.helpfulness = 0;
     }
     writer.write(data);
-
   })
   .on('end', () => {
-    console.log('Done')
-  })
+    console.log('Done');
+  });

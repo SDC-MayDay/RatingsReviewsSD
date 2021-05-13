@@ -2,7 +2,7 @@ const models = require('../Models');
 
 module.exports = {
   getReviewsWithPhotos: (req, res) => {
-    const { productId } = req.query;
+    const { productId } = req.params;
     models.getReviews(productId, (err, reviews) => {
       if (err) {
         res.status(400).send('Error in grabbing the reviews', err);

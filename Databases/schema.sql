@@ -71,5 +71,5 @@ CREATE TABLE Characteristic_Reviews (
   FOREIGN KEY (Characteristic_ID) REFERENCES Characteristics(Characteristic_ID),
   FOREIGN KEY (Review_ID) REFERENCES Reviews(Review_ID),
   PRIMARY KEY (id)
-)
+);
 
