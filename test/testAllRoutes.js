@@ -42,3 +42,27 @@ describe('Testing the get metdata route', () => {
       });
   });
 });
+
+describe('Testing the Patch a Review route for Helpfulness!', () => {
+  it('It should update the helpfulness of a particular review by 1', (done) => {
+    const reviewId = 5;
+    chai.request(server)
+      .patch(`/reviews/${reviewId}`)
+      .end((err, response) => {
+        response.should.have.status(204);
+        done();
+      });
+  });
+});
+
+describe('Testing the Patch a Review route for Reporting a Review!', () => {
+  it('It should update the reported status of a particular review to true', (done) => {
+    const reviewId = 5;
+    chai.request(server)
+      .patch(`/reportReview/${reviewId}`)
+      .end((err, response) => {
+        response.should.have.status(204);
+        done();
+      });
+  });
+});

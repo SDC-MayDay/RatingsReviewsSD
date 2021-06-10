@@ -24,7 +24,7 @@ app.patch('/reviews/:reviewId', (req, res) => {
 });
 
 app.patch('/reportReview/:reviewId', (req, res) => {
-  controllers.updateReviewReported(req, res);
+  controllers.updateReported(req, res);
 });
 
 app.listen(port, () => {
