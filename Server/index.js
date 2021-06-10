@@ -30,3 +30,5 @@ app.patch('/reportReview/:reviewId', (req, res) => {
 app.listen(port, () => {
   console.log(`Listening on Port ${port}`);
 });
+
+module.exports = app;
